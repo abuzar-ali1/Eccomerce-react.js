@@ -36,7 +36,7 @@ const dispatch = useDispatch()
 
   const filterProduct = (catagoryProduct) => {
     const filterByCategory = products?.filter(
-      (item) => item.category.name === catagoryProduct.value
+      (item) => item.category === catagoryProduct.value && catagoryProduct.value !== null
     );
     setUpdatedProduct(filterByCategory);
   };
@@ -56,9 +56,9 @@ const dispatch = useDispatch()
         });
         const uniqueData = productCatagory.filter(
           (item, index, self) =>
-            index === self.findIndex((t) => t.value === item.value)
+            index === self.findIndex((t) => t.value === item.value)  
         );
-        setCatagoryArr(uniqueData);
+        setCatagoryArr(uniqueData || null || "" );
 
         setProducts(data?.data);
         setUpdatedProduct(data?.data);
@@ -73,8 +73,8 @@ const dispatch = useDispatch()
         disablePortal
         options={catagoryArr}
         onChange={(e, newValue) => {
-          filterProduct(newValue);
-        }}
+          filterProduct(newValue); 
+         } }
         sx={{ width: 300 }}
         renderInput={(params) => <TextField {...params} label="Catogries" />}
       />
