@@ -9,7 +9,7 @@ export const CartList = (props) => {
   const { openCartList } = props;
   const { toggleCartList } = props;
   const { cartItems } = useSelector((state) => state.cart);
-  console.log(cartItems)  ;
+
   const dispatch = useDispatch();
 
   return (

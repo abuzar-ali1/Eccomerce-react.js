@@ -14,7 +14,8 @@ import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const SignIn = () => {
   const signInSchema = yup.object({
@@ -22,10 +23,24 @@ const SignIn = () => {
     password: yup
       .string()
 
-
       .required("Password Name is required!"),
   });
+  const signInNavigate = useNavigate()
+  const signInHandler = (data) => {
+    const signInUser = async ()=>{
+      const resp = await axios.post("https://api.escuelajs.co/api/v1/auth/login", data);
+      console.log(resp);
 
+      if (resp.data.access_token) {
+        
+        localStorage.setItem("token", resp.data.access_token)
+        signInNavigate("/")
+      }
+    }
+
+    signInUser();
+  };
+  
   const {
     control,
     handleSubmit,
@@ -55,11 +70,7 @@ const SignIn = () => {
       style={{ height: "100vh" }}
       className="border d-flex justify-content-center align-items-center"
     >
-      <form
-        onSubmit={handleSubmit((data) => {
-          console.log(data);
-        })}
-      >
+      <form onSubmit={handleSubmit((data) => signInHandler(data))}>
         {" "}
         <Box className="">
           <Typography className="fw-bold" variant="h5">
@@ -90,7 +101,7 @@ const SignIn = () => {
                 {errors?.email?.message}
               </Typography>
             </Box>
-                <br />
+            <br />
             <Box>
               <Controller
                 className="my-2"

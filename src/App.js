@@ -10,27 +10,33 @@ import ProductDetails from "./Components/product-details/ProductDetails";
 import { Provider } from "react-redux";
 import { store } from "./store/store";
 import ProductCard from "./Components/products/productCards";
+import ProtectRoute from "./Components/protect-route/ProtectRoute";
 function App() {
   const router = createBrowserRouter([
-    { path: "/", 
-      element: <Appbar />, 
-      children:[{
-        path:"",
-        element: <ProductCard/>
+    {
+      path: "/",
+      element: <Appbar />,
+      children: [
+        {
+          path: "",
+          element: (
+            <ProtectRoute>
+              <ProductCard />
+            </ProtectRoute>
+          ),
+        },
+        { path: "/product-Details/:product_id", element: <ProductDetails /> },
+      ],
+      errorElement: <ErrorPage />,
+    },
 
-      },
-      {path: "/product-Details/:product_id", element: <ProductDetails/> },
-    ], 
-      errorElement: <ErrorPage/> },
-    
-    { path: "/Sign-In", element: <SignIn/> , errorElement: <ErrorPage/> },
-    { path: "/Sign-Up", element: <SignUp/>, errorElement: <ErrorPage/>  },
+    { path: "/Sign-In", element: <SignIn />, errorElement: <ErrorPage /> },
+    { path: "/Sign-Up", element: <SignUp />, errorElement: <ErrorPage /> },
   ]);
   return (
     <div className="App">
-      <Provider store={store }>
-
-      <RouterProvider router={router} />
+      <Provider store={store}>
+        <RouterProvider router={router} />
       </Provider>
     </div>
   );
