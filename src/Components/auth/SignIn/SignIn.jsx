@@ -11,60 +11,22 @@ import {
   Typography,
 } from "@mui/material";
 import React from "react";
-import { Controller, useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
-
+import { Controller } from "react-hook-form";
+import { Link } from "react-router-dom";
+import useSignIn from "./useSignIn";
 const SignIn = () => {
-  const signInSchema = yup.object({
-    email: yup.string().required("Email is required!"),
-    password: yup
-      .string()
-
-      .required("Password Name is required!"),
-  });
-  const signInNavigate = useNavigate()
-  const signInHandler = (data) => {
-    const signInUser = async ()=>{
-      const resp = await axios.post("https://api.escuelajs.co/api/v1/auth/login", data);
-      console.log(resp);
-
-      if (resp.data.access_token) {
-        
-        localStorage.setItem("token", resp.data.access_token)
-        signInNavigate("/")
-      }
-    }
-
-    signInUser();
-  };
-  
   const {
+    showPassword,
+    handleClickShowPassword,
+    handleMouseDownPassword,
+    handleMouseUpPassword,
     control,
     handleSubmit,
-    formState: { errors },
-  } = useForm({
-    defaultValues: {
-      email: "",
-      password: "",
-    },
-
-    resolver: yupResolver(signInSchema),
-  });
-  console.log(errors, "error");
-
-  const [showPassword, setShowPassword] = React.useState(false);
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
-
-  const handleMouseDownPassword = (event) => {
-    event.preventDefault();
-  };
-
-  const handleMouseUpPassword = (event) => {
-    event.preventDefault();
-  };
+    signInHandler,
+    signInSchema,
+    yupResolver,
+    errors,
+  } = useSignIn();
   return (
     <div
       style={{ height: "100vh" }}

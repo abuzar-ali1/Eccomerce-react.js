@@ -6,24 +6,14 @@ import { Box, Rating, Typography, Button, Skeleton } from "@mui/material";
 import { addToCart } from "../../store/slices/cart/cartSlice";
 import { useDispatch, useSelector } from "react-redux";
 import SkeltonProductDetails from "./SkeltonProductDetails";
+import useGetProductDetails from "../../hooks/useGetProductDetails";
 
 const ProductDetails = () => {
   const { cartItems } = useSelector((state) => state.cart);
-
-  const [isLoadData, setIsLoadData] = useState(true);
-  const [product, setProduct] = useState();
   const { product_id } = useParams();
   const dispatch = useDispatch();
   const [productDetails, setProductDetails] = useState({});
-  useEffect(() => {
-    const productData = axios
-      .get(`https://fakestoreapi.com/products/${product_id}`)
-      .then((data) => {
-        setProduct(data?.data);
-
-        setIsLoadData(false);
-      });
-  }, []);
+  const {isLoadData,product} = useGetProductDetails(product_id)
   useEffect(() => {
     const renderProduct = cartItems?.filter((item) => item.id == product_id)[0];
     setProductDetails(renderProduct);

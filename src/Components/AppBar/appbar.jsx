@@ -98,15 +98,16 @@ function Appbar(props) {
           >
             FreshCart
           </Typography>
+        
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
-            {navItems.map((item) => (
+           
+          {navItems.map((item) => (
              <Link key={item?.id} to={item?.navLink}>
               <Button key={item?.id} sx={{ color: "#fff" }}>
                 {item?.navItem}
               </Button>
              </Link>
             ))}
-
             <Badge
               sx={{ cursor: "pointer" }}
               badgeContent={cartItems.length}
