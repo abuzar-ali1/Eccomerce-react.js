@@ -1,5 +1,4 @@
 import { Box, Typography } from '@mui/material'
-import React from 'react'
 import errImg from "./download.png"
 
 const ErrorPage = () => {

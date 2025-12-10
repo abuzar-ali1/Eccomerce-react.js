@@ -1,4 +1,3 @@
-import axios from 'axios';
 import  { useState,useEffect } from 'react'
 import { useDispatch } from "react-redux";
 import { Bounce, toast } from 'react-toastify';
@@ -9,16 +8,10 @@ const useProductCards = () => {
     const [catagoryArr, setCatagoryArr] = useState([]);
     const [updatedProduct, setUpdatedProduct] = useState([]);
     const dispatch = useDispatch()
-    const [open, setOpen] = useState(false);
     const [currentPage , setCurrentPage] = useState(1)
     const itemsPerPage = 10;
-    const [productId, setProductId] = useState();
     const totalPages = Math.ceil(updatedProduct.length/ itemsPerPage);
-    const handleOpen = (id) => {
-      setOpen(true);
-      setProductId(id)
-    }
-    const handleClose = () => setOpen(false);
+ 
     
     const filterProduct = (catagoryProduct) => {
       if(catagoryProduct === null){
@@ -54,7 +47,8 @@ const useProductCards = () => {
     }, []);
 
     const deletProduct = async (id) =>{
-      const deleteProductResp = await axiosClient.delete(`products/${id}`)
+      const deleteProductResp = await axiosClient.delete(`product/${id}`)
+      console.log(deleteProductResp , id);
       
       if( deleteProductResp?.status === 200){
         const updatedProductList = updatedProduct.filter((item)=> item.id !== id)
@@ -73,7 +67,7 @@ const useProductCards = () => {
       }
     }
   
-    return {isLoadData,products,catagoryArr,updatedProduct,dispatch,currentPage,totalPages,filterProduct,useEffect,setCurrentPage,itemsPerPage,open, handleOpen, handleClose,productId,deletProduct}
+    return {isLoadData,products,catagoryArr,updatedProduct,dispatch,currentPage,totalPages,filterProduct,useEffect,setCurrentPage,itemsPerPage,deletProduct}
 }
 
 export default useProductCards
