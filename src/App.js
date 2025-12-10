@@ -12,28 +12,16 @@ import { store } from "./store/store";
 import ProductCard from "./Components/products/productCards";
 import ProtectRoute from "./Components/protect-route/ProtectRoute";
 import { Box, CssBaseline } from "@mui/material";
-import { useState } from "react";
+import Contact from "./Components/Contact/Contact";
+import About from "./Components/About/About";
 
-// Main Layout Component that includes Appbar and Footer
-const MainLayout = ({ showAppbar = true }) => {
+// Main Layout Component that includes Appbar and Footer for all pages
+const MainLayout = () => {
   return (
     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
       <CssBaseline />
-      {showAppbar && <Appbar />}
-      <Box component="main" sx={{ flexGrow: 1 }}>
-        {showAppbar && <div style={{ height: '64px' }} />} 
-        <Outlet />
-      </Box>
-      <Footer />
-    </Box>
-  );
-};
-
-const AuthLayout = () => {
-  return (
-    <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
-      <CssBaseline />
-      <Box component="main" sx={{ flexGrow: 1 }}>
+      <Appbar />
+      <Box component="main" sx={{ flexGrow: 1, mt: 8 }}>
         <Outlet />
       </Box>
       <Footer />
@@ -42,76 +30,43 @@ const AuthLayout = () => {
 };
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
   const router = createBrowserRouter([
     {
       path: "/",
       element: <MainLayout />,
+      errorElement: <ErrorPage />,
       children: [
         {
-          path: "",
+          index: true,
           element: (
             <ProtectRoute>
               <ProductCard />
             </ProtectRoute>
           ),
         },
-        { 
-          path: "/product-Details/:product_id", 
-          element: <ProductDetails /> 
+        {
+          path: "product-Details/:product_id",
+          element: <ProductDetails />,
+        },
+        {
+          path: "about",
+          element: <About/>,
+        },
+        {
+          path: "contact",
+          element: <Contact />,
         },
       ],
-      errorElement: <ErrorPage />,
     },
     {
       path: "/Sign-In",
-      element: <AuthLayout />,
-      children: [
-        {
-          index: true,
-          element: <SignIn setIsAuthenticated={setIsAuthenticated} />,
-        },
-      ],
-      errorElement: <ErrorPage />,
-    },
-    {
-      path: "/Sign-Up",
-      element: <AuthLayout />,
-      children: [
-        {
-          index: true,
-          element: <div>Sign Up Page</div>, 
-        },
-      ],
-      errorElement: <ErrorPage />,
-    },
-    {
-      path: "/about",
-      element: <MainLayout />,
-      children: [
-        {
-          index: true,
-          element: <div>About Page</div>, 
-        },
-      ],
-      errorElement: <ErrorPage />,
-    },
-    {
-      path: "/contact",
-      element: <MainLayout />,
-      children: [
-        {
-          index: true,
-          element: <div>Contact Page</div>,
-        },
-      ],
+      element: <SignIn />,
       errorElement: <ErrorPage />,
     },
   ]);
 
   return (
-    <div className="App">
+    <div>
       <Provider store={store}>
         <RouterProvider router={router} />
       </Provider>
