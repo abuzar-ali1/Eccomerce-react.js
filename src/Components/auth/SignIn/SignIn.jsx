@@ -15,9 +15,49 @@ import {
   Alert,
   Divider,
   alpha,
+  CircularProgress,
 } from "@mui/material";
+import React from "react";
 import { Controller } from "react-hook-form";
+import { Link } from "react-router-dom";
 import useSignIn from "./useSignIn";
+import { styled } from "@mui/material/styles";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import ErrorIcon from "@mui/icons-material/Error";
+
+// Styled Components
+const SuccessAlert = styled(Alert)(({ theme }) => ({
+  borderRadius: "16px",
+  border: `1px solid ${alpha("#4caf50", 0.3)}`,
+  background: alpha("#4caf50", 0.1),
+  color: "#2e7d32",
+  fontWeight: 600,
+  "& .MuiAlert-icon": {
+    color: "#4caf50",
+  },
+  animation: "slideIn 0.5s ease",
+  "@keyframes slideIn": {
+    from: { transform: "translateY(-20px)", opacity: 0 },
+    to: { transform: "translateY(0)", opacity: 1 },
+  },
+}));
+
+const ErrorAlert = styled(Alert)(({ theme }) => ({
+  borderRadius: "16px",
+  border: `1px solid ${alpha("#f44336", 0.3)}`,
+  background: alpha("#f44336", 0.1),
+  color: "#d32f2f",
+  fontWeight: 600,
+  "& .MuiAlert-icon": {
+    color: "#f44336",
+  },
+  animation: "shake 0.5s ease",
+  "@keyframes shake": {
+    "0%, 100%": { transform: "translateX(0)" },
+    "10%, 30%, 50%, 70%, 90%": { transform: "translateX(-5px)" },
+    "20%, 40%, 60%, 80%": { transform: "translateX(5px)" },
+  },
+}));
 
 const SignIn = () => {
   const {
@@ -29,7 +69,17 @@ const SignIn = () => {
     handleSubmit,
     signInHandler,
     errors,
+    loginStatus,
+    clearLoginStatus,
   } = useSignIn();
+
+  // Demo credentials for display
+  const DEMO_EMAIL = "john@mail.com";
+  const DEMO_PASSWORD = "changeme";
+
+  const handleFormSubmit = (data) => {
+    signInHandler(data);
+  };
 
   return (
     <Box
@@ -106,6 +156,28 @@ const SignIn = () => {
               </Box>
             </Zoom>
 
+            {/* Success/Error Messages */}
+            {loginStatus.success && (
+              <SuccessAlert
+                icon={<CheckCircleIcon fontSize="inherit" />}
+                severity="success"
+                sx={{ mb: 3 }}
+              >
+                {loginStatus.message}
+              </SuccessAlert>
+            )}
+
+            {loginStatus.error && (
+              <ErrorAlert
+                icon={<ErrorIcon fontSize="inherit" />}
+                severity="error"
+                sx={{ mb: 3 }}
+                onClose={clearLoginStatus}
+              >
+                {loginStatus.message}
+              </ErrorAlert>
+            )}
+
             <Alert 
               severity="info" 
               sx={{
@@ -125,18 +197,17 @@ const SignIn = () => {
               }}
             >
               <Typography variant="body2" fontWeight={600}>
-                Use demo credentials:
+                Use demo credentials to login:
+              </Typography>
+              <Typography variant="caption" display="block">
+                Email: <strong>{DEMO_EMAIL}</strong>
               </Typography>
               <Typography variant="caption">
-                Email: <strong>john@mail.com</strong>
-              </Typography>
-              <br />
-              <Typography variant="caption">
-                Password: <strong>changeme</strong>
+                Password: <strong>{DEMO_PASSWORD}</strong>
               </Typography>
             </Alert>
 
-            <form onSubmit={handleSubmit(signInHandler)}>
+            <form onSubmit={handleSubmit(handleFormSubmit)}>
               <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
                 <Box>
                   <Controller
@@ -151,6 +222,7 @@ const SignIn = () => {
                         label="Email Address"
                         placeholder="john@mail.com"
                         {...field}
+                        disabled={loginStatus.loading}
                         sx={{
                           "& .MuiOutlinedInput-root": {
                             borderRadius: 2,
@@ -208,6 +280,7 @@ const SignIn = () => {
                           label="Password"
                           placeholder="changeme"
                           {...field}
+                          disabled={loginStatus.loading}
                           sx={{
                             borderRadius: 2,
                             transition: "all 0.3s ease",
@@ -234,6 +307,7 @@ const SignIn = () => {
                                 onMouseDown={handleMouseDownPassword}
                                 onMouseUp={handleMouseUpPassword}
                                 edge="end"
+                                disabled={loginStatus.loading}
                                 sx={{
                                   color: "primary.main",
                                   "&:hover": {
@@ -272,26 +346,50 @@ const SignIn = () => {
                   fullWidth
                   variant="contained"
                   size="large"
+                  disabled={loginStatus.loading}
                   sx={{
                     mt: 2,
                     py: 1.5,
                     borderRadius: 2,
-                    background: "linear-gradient(45deg, #667eea 30%, #764ba2 90%)",
-                    boxShadow: "0 4px 15px rgba(102, 126, 234, 0.4)",
+                    background: loginStatus.success
+                      ? "linear-gradient(45deg, #4CAF50 30%, #2E7D32 90%)"
+                      : loginStatus.error
+                      ? "linear-gradient(45deg, #f44336 30%, #d32f2f 90%)"
+                      : "linear-gradient(45deg, #667eea 30%, #764ba2 90%)",
+                    boxShadow: loginStatus.success
+                      ? "0 4px 15px rgba(76, 175, 80, 0.4)"
+                      : loginStatus.error
+                      ? "0 4px 15px rgba(244, 67, 54, 0.4)"
+                      : "0 4px 15px rgba(102, 126, 234, 0.4)",
                     fontWeight: 700,
                     fontSize: "1rem",
                     textTransform: "none",
                     transition: "all 0.3s ease",
                     "&:hover": {
                       transform: "translateY(-2px)",
-                      boxShadow: "0 6px 20px rgba(102, 126, 234, 0.6)",
+                      boxShadow: loginStatus.success
+                        ? "0 6px 20px rgba(76, 175, 80, 0.6)"
+                        : loginStatus.error
+                        ? "0 6px 20px rgba(244, 67, 54, 0.6)"
+                        : "0 6px 20px rgba(102, 126, 234, 0.6)",
                     },
                     "&:active": {
                       transform: "translateY(0)",
                     },
+                    "&.Mui-disabled": {
+                      background: alpha("#667eea", 0.5),
+                    },
                   }}
                 >
-                  Sign In
+                  {loginStatus.loading ? (
+                    <CircularProgress size={24} color="inherit" />
+                  ) : loginStatus.success ? (
+                    "✓ Success"
+                  ) : loginStatus.error ? (
+                    "✗ Invalid"
+                  ) : (
+                    "Sign In"
+                  )}
                 </Button>
 
                 <Divider sx={{ my: 2 }}>
@@ -300,8 +398,65 @@ const SignIn = () => {
                   </Typography>
                 </Divider>
 
+                <Zoom in timeout={800}>
+                  <Typography
+                    variant="body2"
+                    sx={{ textAlign: "center", color: "text.secondary" }}
+                  >
+                    Create your account{" "}
+                    <Link
+                      to="/Sign-Up"
+                      style={{
+                        color: "#667eea",
+                        textDecoration: "none",
+                        fontWeight: 600,
+                        position: "relative",
+                        paddingBottom: "2px",
+                      }}
+                    >
+                      <Box
+                        component="span"
+                        sx={{
+                          "&:after": {
+                            content: '""',
+                            position: "absolute",
+                            width: "100%",
+                            height: "2px",
+                            bottom: 0,
+                            left: 0,
+                            backgroundColor: "#667eea",
+                            transform: "scaleX(0)",
+                            transformOrigin: "bottom right",
+                            transition: "transform 0.3s ease",
+                          },
+                          "&:hover:after": {
+                            transform: "scaleX(1)",
+                            transformOrigin: "bottom left",
+                          },
+                        }}
+                      >
+                        Sign Up
+                      </Box>
+                    </Link>
+                  </Typography>
+                </Zoom>
               </Box>
             </form>
+
+            <Fade in timeout={1000}>
+              <Typography
+                variant="caption"
+                sx={{
+                  display: "block",
+                  textAlign: "center",
+                  mt: 3,
+                  color: "text.secondary",
+                  opacity: 0.7,
+                }}
+              >
+                Note: This is a demo. Use the provided credentials to test.
+              </Typography>
+            </Fade>
           </Paper>
 
           <Fade in timeout={1000}>

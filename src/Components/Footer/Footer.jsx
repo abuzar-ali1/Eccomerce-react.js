@@ -454,8 +454,9 @@ const Footer = () => {
                     <Zoom in timeout={index * 100 + 1000} key={index}>
                       <Box
                         sx={{
-                          width: 40,
+                          width: 70,
                           height: 25,
+                          mx: 1,
                           background: alpha("#fff", 0.1),
                           borderRadius: "4px",
                           display: "flex",

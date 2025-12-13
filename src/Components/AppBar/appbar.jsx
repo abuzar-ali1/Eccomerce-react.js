@@ -295,7 +295,7 @@ function Appbar(props) {
                       top: -5,
                       right: -5,
                       fontSize: "0.6rem",
-                      height: "16px",
+                      height: "10px",
                       fontWeight: 700,
                       background: "linear-gradient(45deg, #ffde59 30%, #ff9052 90%)",
                       color: "#333",
