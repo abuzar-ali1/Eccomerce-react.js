@@ -433,14 +433,15 @@ export const CartList = (props) => {
           <Fade in timeout={500}>
             <Box
               sx={{
-                p: 3,
+                px: 3,
+                py:1,
                 background: "rgba(255, 255, 255, 0.95)",
                 backdropFilter: "blur(10px)",
                 borderTop: `1px solid ${alpha("#667eea", 0.1)}`,
                 boxShadow: "0 -10px 30px rgba(0, 0, 0, 0.05)",
               }}
             >
-              <Box sx={{ mb: 3 }}>
+              <Box sx={{ mb: 1 }}>
                 <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}>
                   <Typography variant="body1" sx={{ color: "text.secondary" }}>
                     Subtotal
@@ -457,7 +458,7 @@ export const CartList = (props) => {
                     ${totalPrice > 50 ? "0.00" : "5.99"}
                   </Typography>
                 </Box>
-                <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
+                <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}>
                   <Typography variant="body1" sx={{ color: "text.secondary" }}>
                     Tax
                   </Typography>
@@ -466,7 +467,7 @@ export const CartList = (props) => {
                   </Typography>
                 </Box>
                 
-                <Divider sx={{ my: 2 }} />
+                <Divider sx={{ my: 1 }} />
                 
                 <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   <Typography variant="h5" sx={{ fontWeight: 800 }}>
@@ -508,7 +509,7 @@ export const CartList = (props) => {
               
               <CheckoutButton
                 fullWidth
-                size="large"
+                size="medium"
                 endIcon={<ArrowForwardIcon />}
                 onClick={() => {
                   // Add checkout logic here
@@ -523,8 +524,7 @@ export const CartList = (props) => {
                 sx={{
                   display: "block",
                   textAlign: "center",
-                  mt: 2,
-                  color: "text.secondary",
+                    color: "text.secondary",
                 }}
               >
                 Free shipping on orders over $50

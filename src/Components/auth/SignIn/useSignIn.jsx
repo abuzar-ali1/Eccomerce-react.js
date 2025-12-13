@@ -83,7 +83,7 @@ const useSignIn = () => {
 
       
         setTimeout(() => {
-          navigate("/");
+          navigate("/home");
         }, 1500);
       } else {
         throw new Error("No access token received");

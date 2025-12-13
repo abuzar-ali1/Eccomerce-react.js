@@ -1,7 +1,8 @@
 import  { useState,useEffect } from 'react'
 import { useDispatch } from "react-redux";
-import { Bounce, toast } from 'react-toastify';
 import axiosClient from '../../client/axiosInstance';
+import { useNavigate } from "react-router-dom";
+
 const useProductCards = () => {
     const [isLoadData, setIsLoadData] = useState(true);
     const [products, setProducts] = useState();
@@ -46,28 +47,16 @@ const useProductCards = () => {
         });
     }, []);
 
-    const deletProduct = async (id) =>{
-      const deleteProductResp = await axiosClient.delete(`product/${id}`)
-      console.log(deleteProductResp , id);
-      
-      if( deleteProductResp?.status === 200){
-        const updatedProductList = updatedProduct.filter((item)=> item.id !== id)
-        toast.success('🦄 Product deleted successfully!', {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: false,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-          transition: Bounce,
-          });
-        setUpdatedProduct(updatedProductList)
-      }
+  // Handle navigation to product details
+  const navigate = useNavigate();
+
+  const handleViewDetails = (productId) => {
+    if (productId) {
+      navigate(`/product-Details/${productId}`);
     }
+  };
   
-    return {isLoadData,products,catagoryArr,updatedProduct,dispatch,currentPage,totalPages,filterProduct,useEffect,setCurrentPage,itemsPerPage,deletProduct}
+    return {isLoadData,products,catagoryArr,updatedProduct,dispatch,currentPage,totalPages,filterProduct,useEffect,setCurrentPage,itemsPerPage,handleViewDetails}
 }
 
 export default useProductCards

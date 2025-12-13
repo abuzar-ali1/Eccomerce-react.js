@@ -16,18 +16,15 @@ import {
   Zoom,
   Grow,
   Fade,
-  IconButton,
   Container,
   Pagination as MuiPagination,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import DeleteIcon from "@mui/icons-material/Delete";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
-import VisibilityIcon from "@mui/icons-material/Visibility";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import { addToCart } from "../../store/slices/cart/cartSlice";
 import useProductCards from "./useProductCards";
@@ -118,27 +115,28 @@ const ProductCard = () => {
     filterProduct,
     setCurrentPage,
     itemsPerPage,
-    deletProduct
+    handleViewDetails
   } = useProductCards();
+
 
 
   return (
     <Fade in timeout={800}>
       <Container maxWidth="xl" sx={{ py: 4 }}>
         <ToastContainer position="top-right" />
-        
+
         {/* Header Section */}
         <Zoom in timeout={500}>
-          <Box sx={{ 
-            display: "flex", 
+          <Box sx={{
+            display: "flex",
             flexDirection: { xs: "column", md: "row" },
-            justifyContent: "space-between", 
+            justifyContent: "space-between",
             alignItems: { xs: "flex-start", md: "center" },
             mb: 4,
-            gap: 3 
+            gap: 3
           }}>
-            <Typography 
-              variant="h3" 
+            <Typography
+              variant="h3"
               sx={{
                 fontWeight: 800,
                 fontSize: { xs: "2rem", md: "2.5rem" },
@@ -149,25 +147,25 @@ const ProductCard = () => {
             >
               Our Products
             </Typography>
-            
+
             <StyledAutocomplete
               disablePortal
               options={catagoryArr}
               onChange={(e, newValue) => filterProduct(newValue)}
               sx={{ width: { xs: "100%", md: 300 } }}
               renderInput={(params) => (
-                <TextField 
-                  {...params} 
-                  label="Filter by Category" 
+                <TextField
+                  {...params}
+                  label="Filter by Category"
                   InputProps={{
                     ...params.InputProps,
                     startAdornment: (
-                      <LocalOfferIcon 
-                        sx={{ 
-                          mr: 1, 
+                      <LocalOfferIcon
+                        sx={{
+                          mr: 1,
                           color: "primary.main",
-                          opacity: 0.7 
-                        }} 
+                          opacity: 0.7
+                        }}
                       />
                     ),
                   }}
@@ -179,14 +177,14 @@ const ProductCard = () => {
 
         {/* Products Grid */}
         {isLoadData ? (
-          <Box sx={{ 
-            display: "flex", 
-            justifyContent: "center", 
-            alignItems: "center", 
-            minHeight: "400px" 
+          <Box sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            minHeight: "400px"
           }}>
-            <CircularProgress 
-              size={60} 
+            <CircularProgress
+              size={60}
               thickness={4}
               sx={{
                 color: "primary.main",
@@ -224,9 +222,9 @@ const ProductCard = () => {
                           className="product-image"
                         >
                           <SwiperSlide>
-                            <Box sx={{ 
-                              display: "flex", 
-                              justifyContent: "center", 
+                            <Box sx={{
+                              display: "flex",
+                              justifyContent: "center",
                               alignItems: "center",
                               height: "250px",
                               overflow: "hidden"
@@ -244,9 +242,9 @@ const ProductCard = () => {
                             </Box>
                           </SwiperSlide>
                           <SwiperSlide>
-                            <Box sx={{ 
-                              display: "flex", 
-                              justifyContent: "center", 
+                            <Box sx={{
+                              display: "flex",
+                              justifyContent: "center",
                               alignItems: "center",
                               height: "250px",
                               overflow: "hidden"
@@ -295,36 +293,7 @@ const ProductCard = () => {
                             transition: "all 0.3s ease",
                           }}
                         >
-                          <Tooltip title="Quick View" placement="left">
-                            <IconButton
-                              sx={{
-                                background: "rgba(255, 255, 255, 0.9)",
-                                backdropFilter: "blur(10px)",
-                                "&:hover": {
-                                  background: "rgba(255, 255, 255, 1)",
-                                  transform: "scale(1.1)",
-                                },
-                              }}
-                            >
-                              <VisibilityIcon fontSize="small" />
-                            </IconButton>
-                          </Tooltip>
-                          <Tooltip title="Delete Product" placement="left">
-                            <IconButton
-                              onClick={() => deletProduct(product?.id)}
-                              sx={{
-                                background: "rgba(255, 87, 87, 0.9)",
-                                color: "white",
-                                backdropFilter: "blur(10px)",
-                                "&:hover": {
-                                  background: "rgba(255, 87, 87, 1)",
-                                  transform: "scale(1.1)",
-                                },
-                              }}
-                            >
-                              <DeleteIcon fontSize="small" />
-                            </IconButton>
-                          </Tooltip>
+
                         </Box>
                       </Box>
 
@@ -373,11 +342,12 @@ const ProductCard = () => {
                         </Box>
 
                         {/* Price and Action Buttons */}
-                        <Box sx={{ 
-                          display: "flex", 
-                          justifyContent: "space-between", 
+                        <Box sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
                           alignItems: "center",
-                          mt: 2 
+                          mt: 2,
+                          gap: 1 // Adds a small gap between the buttons
                         }}>
                           <Typography
                             variant="h5"
@@ -390,14 +360,43 @@ const ProductCard = () => {
                             ${product?.price?.toFixed(2)}
                           </Typography>
 
-                          <AddToCartButton
-                            size="small"
-                            variant="contained"
-                            onClick={() => dispatch(addToCart(product))}
-                            startIcon={<AddIcon />}
-                          >
-                            Add
-                          </AddToCartButton>
+                          <Box sx={{ display: 'flex', gap: 1 }}>
+                            {/* New VIEW Button */}
+                            <Button
+                              variant="outlined"
+                              size="small"
+                              onClick={() => handleViewDetails(product?.id)}
+                              sx={{
+                                borderRadius: "10px",
+                                fontWeight: 600,
+                                fontSize: "0.875rem",
+                                textTransform: "none",
+                                padding: "8px 16px",
+                                borderColor: alpha("#667eea", 0.5),
+                                color: "#667eea",
+                                background: "transparent",
+                                transition: "all 0.3s ease",
+                                "&:hover": {
+                                  borderColor: "#667eea",
+                                  background: alpha("#667eea", 0.05),
+                                  transform: "translateY(-2px)",
+                                  boxShadow: "0 4px 12px rgba(102, 126, 234, 0.2)",
+                                },
+                              }}
+                            >
+                              VIEW →
+                            </Button>
+
+                            {/* Existing ADD Button */}
+                            <AddToCartButton
+                              size="small"
+                              variant="contained"
+                              onClick={() => dispatch(addToCart(product))}
+                              startIcon={<AddIcon />}
+                            >
+                              Add
+                            </AddToCartButton>
+                          </Box>
                         </Box>
                       </CardContent>
                     </StyledCard>
@@ -446,8 +445,8 @@ const ProductCard = () => {
         {/* Empty State */}
         {!isLoadData && updatedProduct.length === 0 && (
           <Zoom in timeout={800}>
-            <Box sx={{ 
-              textAlign: "center", 
+            <Box sx={{
+              textAlign: "center",
               py: 10,
               borderRadius: "20px",
               background: "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)",
@@ -462,7 +461,6 @@ const ProductCard = () => {
             </Box>
           </Zoom>
         )}
-
       </Container>
     </Fade>
   );

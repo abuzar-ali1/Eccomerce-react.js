@@ -82,11 +82,19 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
     backgroundColor: "#ff4081",
     color: "white",
     boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
-    animation: "pulse 2s infinite",
+    width: "18px",
+    height: "18px",
+    fontSize: "0.7rem",
+    fontWeight: "bold",
+    borderRadius: "50%",
+    // Adjust position to not cover icon
+    top: "8px",
+    right: "8px",
+    animation: (props) => props.invisible ? "none" : "pulse 2s infinite",
     "@keyframes pulse": {
-      "0%": { transform: "scale(1)" },
-      "50%": { transform: "scale(1.1)" },
-      "100%": { transform: "scale(1)" },
+      "0%": { transform: "scale(0.9)" },   // Start smaller
+      "50%": { transform: "scale(1.05)" }, // Gentle pulse
+      "100%": { transform: "scale(0.9)" },
     },
   },
 }));
@@ -102,7 +110,7 @@ const MobileDrawer = styled(Drawer)(({ theme }) => ({
 }));
 
 const navItems = [
-  { id: 1, navItem: "Home", navLink: "/", icon: <HomeIcon /> },
+  { id: 1, navItem: "Home", navLink: "/home", icon: <HomeIcon /> },
   { id: 2, navItem: "About", navLink: "/about", icon: <InfoIcon /> },
   { id: 3, navItem: "Contact", navLink: "/contact", icon: <ContactMailIcon /> },
 ];
@@ -231,7 +239,7 @@ function Appbar(props) {
               <Typography
                 variant="h5"
                 component={Link}
-                to="/"
+                to="/home"
                 sx={{
                   flexGrow: { xs: 1, sm: 0 },
                   textDecoration: "none",
@@ -283,26 +291,42 @@ function Appbar(props) {
                   },
                 }}
               >
-                <StyledBadge badgeContent={cartItems.length} color="secondary">
+                {/* Only show badge when cart has items */}
+                {cartItems.length > 0 ? (
+                  <StyledBadge
+                    badgeContent={cartItems.length}
+                    color="secondary"
+                    //  This prevents badge from showing when count is 0
+                    invisible={false}
+                  >
+                    <ShoppingCartIcon fontSize="medium" />
+                  </StyledBadge>
+                ) : (
+                  //  Show just the icon when cart is empty
                   <ShoppingCartIcon fontSize="medium" />
-                </StyledBadge>
+                )}
+
+                {/* Keep the total price chip (only shows when cart has items) */}
                 {cartItems.length > 0 && (
                   <Chip
                     label={`$${cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0).toFixed(2)}`}
                     size="small"
                     sx={{
                       position: "absolute",
-                      top: -5,
-                      right: -5,
+                      top: -8,    // Adjusted position
+                      right: -8,
                       fontSize: "0.6rem",
-                      height: "10px",
+                      height: "16px",
                       fontWeight: 700,
                       background: "linear-gradient(45deg, #ffde59 30%, #ff9052 90%)",
                       color: "#333",
+                      // Ensure it doesn't overlap with badge
+                      zIndex: 2,
                     }}
                   />
                 )}
               </IconButton>
+
 
               <IconButton
                 onClick={handleClick}

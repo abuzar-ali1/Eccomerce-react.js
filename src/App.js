@@ -15,7 +15,6 @@ import { Box, CssBaseline } from "@mui/material";
 import Contact from "./Components/Contact/Contact";
 import About from "./Components/About/About";
 
-// Create a main layout wrapper
 const MainLayout = ({ children }) => {
   return (
     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
@@ -32,16 +31,17 @@ const MainLayout = ({ children }) => {
 function App() {
   const router = createBrowserRouter([
     {
-      path: "/",
-      element: (
-        <MainLayout>
-          <ProtectRoute>
-            <ProductCard />
-          </ProtectRoute>
-        </MainLayout>
-      ),
-      errorElement: <ErrorPage />,
-    },
+    path: "/",                 // Home page
+    element: <SignIn />,       // ⬅️ Show SignIn instead of home
+  },
+  {
+    path: "/home",             // Actual home (protected)
+    element: <ProtectRoute>
+                <MainLayout>
+                  <ProductCard />
+                </MainLayout>
+             </ProtectRoute>,
+  },
     {
       path: "/product-Details/:product_id",
       element: (
@@ -59,7 +59,7 @@ function App() {
         </MainLayout>
       ),
       errorElement: <ErrorPage />,
-    },
+    },  
     {
       path: "/contact",
       element: (

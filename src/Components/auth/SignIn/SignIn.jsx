@@ -19,7 +19,6 @@ import {
 } from "@mui/material";
 import React from "react";
 import { Controller } from "react-hook-form";
-import { Link } from "react-router-dom";
 import useSignIn from "./useSignIn";
 import { styled } from "@mui/material/styles";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -398,48 +397,7 @@ const SignIn = () => {
                   </Typography>
                 </Divider>
 
-                <Zoom in timeout={800}>
-                  <Typography
-                    variant="body2"
-                    sx={{ textAlign: "center", color: "text.secondary" }}
-                  >
-                    Create your account{" "}
-                    <Link
-                      to="/Sign-Up"
-                      style={{
-                        color: "#667eea",
-                        textDecoration: "none",
-                        fontWeight: 600,
-                        position: "relative",
-                        paddingBottom: "2px",
-                      }}
-                    >
-                      <Box
-                        component="span"
-                        sx={{
-                          "&:after": {
-                            content: '""',
-                            position: "absolute",
-                            width: "100%",
-                            height: "2px",
-                            bottom: 0,
-                            left: 0,
-                            backgroundColor: "#667eea",
-                            transform: "scaleX(0)",
-                            transformOrigin: "bottom right",
-                            transition: "transform 0.3s ease",
-                          },
-                          "&:hover:after": {
-                            transform: "scaleX(1)",
-                            transformOrigin: "bottom left",
-                          },
-                        }}
-                      >
-                        Sign Up
-                      </Box>
-                    </Link>
-                  </Typography>
-                </Zoom>
+                
               </Box>
             </form>
 
